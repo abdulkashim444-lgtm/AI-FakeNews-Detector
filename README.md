@@ -1,34 +1,150 @@
-# AI-FakeNews-Detector
-🚀 VeritasAI — AI Fake News Detection Platform
+# VeritasAI — Fake News Detection System
 
-VeritasAI is an advanced AI-powered fake news detection platform designed to identify misleading, biased, and false news content using Natural Language Processing (NLP) and machine learning technologies. In today’s digital era, misinformation spreads rapidly across social media and online platforms, making it difficult for users to distinguish between authentic and fake news. VeritasAI aims to solve this problem by providing intelligent credibility analysis and real-time verification of news articles and headlines.
+An end-to-end AI-powered fake news detection system using Claude (NLP), Flask (backend), and React (frontend).
 
-The platform analyzes textual content using AI-driven algorithms and generates detailed trust scores, credibility ratings, and misinformation indicators. It is capable of detecting clickbait headlines, emotionally manipulative language, and suspicious claims commonly found in fake news articles. By leveraging advanced NLP techniques and the Claude Sonnet API, VeritasAI delivers accurate and efficient analysis to help users make informed decisions.
+## Architecture
 
-The frontend of the application is built using React.js and Vite, providing a fast, responsive, and modern user interface. The backend is developed using Python and Flask with REST API architecture, ensuring smooth communication between the client and server. Docker integration is included for simplified deployment and scalability.
+```
+veritasai/
+├── backend/           ← Flask REST API
+│   ├── app.py         ← Main API server
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   └── .env.example
+├── frontend/          ← React + Vite UI
+│   ├── src/
+│   │   ├── App.jsx    ← Main UI component
+│   │   ├── api.js     ← API service layer
+│   │   ├── index.css  ← Global styles
+│   │   └── main.jsx   ← Entry point
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   └── package.json
+└── docker-compose.yml ← Full stack deployment
+```
 
-✨ Key Features
-🧠 AI-powered fake news verification system
-🔍 Detection of clickbait, misinformation, and biased content
-📊 Real-time credibility and trust score generation
-⚡ NLP-based article and headline analysis
-🌐 Responsive and user-friendly interface
-🔧 Flask-based backend with REST APIs
-🐳 Docker support for easy deployment
-📈 Scalable and optimized architecture
-🛠️ Tech Stack
+## Quick Start
 
-Frontend: React.js, Vite, CSS, Axios
-Backend: Python, Flask, REST API
-AI & NLP: Claude Sonnet API, Natural Language Processing
+### 1. Get your Anthropic API key
+Sign up at https://console.anthropic.com and create an API key.
 
-🎯 Project Highlights
+### 2. Option A — Docker (recommended)
 
-VeritasAI combines Artificial Intelligence, Full-Stack Development, and NLP technologies to create a real-world solution against digital misinformation. The project demonstrates API integration, scalable architecture, modern UI/UX design, and intelligent AI implementation in a practical application.
+```bash
+# Clone and navigate
+cd veritasai
 
-💡 Future Enhancements
-User authentication system
-Multi-language fake news detection
-Database integration
-Mobile application support
-Advanced AI model training and analytics
+# Set your API key
+echo "ANTHROPIC_API_KEY=your_key_here" > .env
+
+# Start everything
+docker-compose up --build
+
+# Open http://localhost:3000
+```
+
+### 3. Option B — Manual Setup
+
+**Backend:**
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate       # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env and set ANTHROPIC_API_KEY=your_key
+python app.py
+# API running at http://localhost:5000
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm install
+cp .env.example .env
+# Edit .env: VITE_API_URL=http://localhost:5000/api
+npm run dev
+# UI running at http://localhost:3000
+```
+
+## API Endpoints
+
+| Method | Endpoint        | Description                        |
+|--------|-----------------|------------------------------------|
+| GET    | /api/health     | Health check + version info        |
+| POST   | /api/analyze    | Analyze a single article/headline  |
+| POST   | /api/batch      | Analyze up to 5 items at once      |
+| GET    | /api/history    | Get recent analysis history        |
+| GET    | /api/stats      | Aggregate statistics               |
+
+### POST /api/analyze
+
+**Request:**
+```json
+{
+  "text": "News article text here...",
+  "url": "https://optional-url.com"
+}
+```
+
+**Response:**
+```json
+{
+  "verdict": "FAKE",
+  "confidence": 92,
+  "summary": "This article displays multiple hallmarks of misinformation...",
+  "scores": {
+    "factual_accuracy": 12,
+    "source_credibility": 8,
+    "emotional_manipulation": 94,
+    "clickbait_score": 88,
+    "scientific_accuracy": 5,
+    "linguistic_quality": 45
+  },
+  "signals": [...],
+  "nlp_tags": [...],
+  "recommendations": [...],
+  "red_flags": [...],
+  "positive_indicators": [],
+  "cached": false,
+  "analyzed_at": "2026-05-18T10:30:00Z"
+}
+```
+
+## Features
+
+- **Real-time AI analysis** powered by Claude Sonnet
+- **6 credibility scores** — factual accuracy, source credibility, emotional manipulation, clickbait, scientific accuracy, linguistic quality
+- **Detection signals** — color-coded red/amber/green flags
+- **NLP markers** — linguistic pattern tags
+- **Red flags & positive indicators** — specific evidence found
+- **Recommendations** — actionable steps for the reader
+- **Response caching** — identical requests return instantly
+- **Rate limiting** — 20 requests/minute, 200/day per IP
+- **Batch analysis** — analyze up to 5 articles at once
+- **Analysis history** — last 100 analyses stored in memory
+- **Live stats** — verdict distribution, avg confidence
+- **Docker ready** — one command deployment
+
+## Tech Stack
+
+| Layer     | Technology              |
+|-----------|-------------------------|
+| AI / NLP  | Anthropic Claude Sonnet |
+| Backend   | Python 3.12 + Flask 3   |
+| Frontend  | React 18 + Vite 5       |
+| Styling   | Pure CSS (no framework) |
+| HTTP      | Axios                   |
+| Deploy    | Docker + Nginx          |
+
+## Production Notes
+
+- Replace in-memory cache with Redis for multi-worker deployments
+- Add a database (PostgreSQL) for persistent history
+- Set `ALLOWED_ORIGINS` to your domain in production
+- Use a reverse proxy (Nginx/Caddy) with HTTPS in production
+- Monitor API usage in the Anthropic console
+
+## License
+
+MIT
