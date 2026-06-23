@@ -1,0 +1,6 @@
+{
+  "name": "VeritasAI",
+  "description": "Enterprise-grade AI-powered Fake News Detection Platform with a futuristic UI, advanced NLP, explainable AI, real-time fact-checking, and multi-source credibility analysis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
